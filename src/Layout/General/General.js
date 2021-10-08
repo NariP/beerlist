@@ -1,14 +1,13 @@
 import React, { useContext } from 'react';
 import { Layout, Switch } from 'antd';
 import { ThemeContext } from '../../RootTheme';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { PATH_PAGE } from 'routes';
 import { BsMoonStarsFill, BsFillEmojiSunglassesFill } from 'react-icons/bs';
 import { THEME_MODE } from 'utils/constatns';
 import styled from 'styled-components';
 
 const General = ({ children }) => {
-  const location = useLocation();
   const { Header, Content, Footer } = Layout;
   const { themeName, toggleTheme } = useContext(ThemeContext);
 
@@ -41,7 +40,7 @@ const General = ({ children }) => {
       <Content className="general-content">{children}</Content>
       <Footer className="general-footer">
         Made By{' '}
-        <a target="_blank" href="https://github.com/NariP">
+        <a target="_blank" rel="noreferrer" href="https://github.com/NariP">
           @nari park
         </a>
       </Footer>
