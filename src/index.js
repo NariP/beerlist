@@ -8,6 +8,7 @@ import createSagaMiddleware from 'redux-saga';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { GlobalStyle } from 'styles';
 import RootTheme from './RootTheme';
+import 'antd/dist/antd.css';
 
 const sagaMiddleware = createSagaMiddleware();
 

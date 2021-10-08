@@ -17,6 +17,7 @@ const GlobalStyle = createGlobalStyle`
   }
   ul {
   list-style: none;
+  margin-bottom: 0;
   }
   h1, h2 {
     font-weight: normal;
@@ -24,6 +25,12 @@ const GlobalStyle = createGlobalStyle`
   }
   button {
   cursor: pointer;
+  }
+  img {
+  display: block;
+  }
+  a{
+  color: #333;
   }
 `;
 export default GlobalStyle;
