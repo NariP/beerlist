@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MaterialTable, { MTableToolbar } from 'material-table';
 import {
   RiShoppingBag2Line,
@@ -10,13 +10,28 @@ import styled from 'styled-components';
 import { tableIcons } from './Secitons';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentColumns, setOrder } from 'Modules/slices/cardHeader';
+import { beersRequest, getBeers } from 'Modules/slices/Beers';
 
 const BeerList = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const currentColumns = useSelector(getCurrentColumns);
+  const beersInfo = useSelector(getBeers);
+
+  const beersInfoSimple = beersInfo?.map(
+    ({ name, image_url, abv, tagline, description, id }) => ({
+      name,
+      url: image_url,
+      abv,
+      tagline,
+      description,
+      id,
+    }),
+  );
+
   const [cartState, setCartState] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
+
   const onColumnDraggedHandler = (sourceIndex, destinationIndex) => {
     const columnList = [...currentColumns];
     let temp = columnList[sourceIndex];
@@ -24,6 +39,12 @@ const BeerList = () => {
     columnList[destinationIndex] = temp;
     dispatch(setOrder(columnList));
   };
+  const getBeerData = () => {
+    dispatch(beersRequest());
+  };
+  useEffect(() => {
+    getBeerData();
+  }, []);
 
   return (
     <Wrapper>
@@ -59,7 +80,7 @@ const BeerList = () => {
               </ToolBar>
             ),
           }}
-          data={fake}
+          data={beersInfoSimple}
           icons={tableIcons}
           onRowClick={(evt, selectedRow) =>
             setSelectedRow(selectedRow.tableData.id)
@@ -131,198 +152,4 @@ const ToolBar = styled.div(({ theme }) => ({
   },
 }));
 
-const fake = [
-  {
-    name: 'Punk IPA 2007 - 2010',
-    abv: 5.5,
-    tagline: 'Post Modern Classic. Spiky. Tropical. Hoppy.',
-    description: 'PosSpiky. Tropical. Hoppy. Tropical. Hoppy....',
-  },
-  {
-    name: '둔켈',
-    abv: 6.0,
-    tagline: 'Baran',
-    description: '음 맛있을걸?',
-  },
-  {
-    name: 'Punk IPA 2007 - 2010',
-    abv: 5.5,
-    tagline: 'Post Modern Classic. Spiky. Tropical. Hoppy.',
-    description: 'PosSpiky. Tropical. Hoppy. Tropical. Hoppy....',
-  },
-  {
-    name: '둔켈',
-    abv: 6.0,
-    tagline: 'Baran',
-    description: '음 맛있을걸?',
-  },
-  {
-    name: 'Punk IPA 2007 - 2010',
-    abv: 5.5,
-    tagline: 'Post Modern Classic. Spiky. Tropical. Hoppy.',
-    description: 'PosSpiky. Tropical. Hoppy. Tropical. Hoppy....',
-  },
-  {
-    name: '둔켈',
-    abv: 6.0,
-    tagline: 'Baran',
-    description: '음 맛있을걸?',
-  },
-  {
-    name: 'Punk IPA 2007 - 2010',
-    abv: 5.5,
-    tagline: 'Post Modern Classic. Spiky. Tropical. Hoppy.',
-    description: 'PosSpiky. Tropical. Hoppy. Tropical. Hoppy....',
-  },
-  {
-    name: '둔켈',
-    abv: 6.0,
-    tagline: 'Baran',
-    description: '음 맛있을걸?',
-  },
-  {
-    name: 'Punk IPA 2007 - 2010',
-    abv: 5.5,
-    tagline: 'Post Modern Classic. Spiky. Tropical. Hoppy.',
-    description: 'PosSpiky. Tropical. Hoppy. Tropical. Hoppy....',
-  },
-  {
-    name: '둔켈',
-    abv: 6.0,
-    tagline: 'Baran',
-    description: '음 맛있을걸?',
-  },
-  {
-    name: 'Punk IPA 2007 - 2010',
-    abv: 5.5,
-    tagline: 'Post Modern Classic. Spiky. Tropical. Hoppy.',
-    description: 'PosSpiky. Tropical. Hoppy. Tropical. Hoppy....',
-  },
-  {
-    name: '둔켈',
-    abv: 6.0,
-    tagline: 'Baran',
-    description: '음 맛있을걸?',
-  },
-  {
-    name: 'Punk IPA 2007 - 2010',
-    abv: 5.5,
-    tagline: 'Post Modern Classic. Spiky. Tropical. Hoppy.',
-    description: 'PosSpiky. Tropical. Hoppy. Tropical. Hoppy....',
-  },
-  {
-    name: '둔켈',
-    abv: 6.0,
-    tagline: 'Baran',
-    description: '음 맛있을걸?',
-  },
-  {
-    name: 'Punk IPA 2007 - 2010',
-    abv: 5.5,
-    tagline: 'Post Modern Classic. Spiky. Tropical. Hoppy.',
-    description: 'PosSpiky. Tropical. Hoppy. Tropical. Hoppy....',
-  },
-  {
-    name: '둔켈',
-    abv: 6.0,
-    tagline: 'Baran',
-    description: '음 맛있을걸?',
-  },
-  {
-    name: 'Punk IPA 2007 - 2010',
-    abv: 5.5,
-    tagline: 'Post Modern Classic. Spiky. Tropical. Hoppy.',
-    description: 'PosSpiky. Tropical. Hoppy. Tropical. Hoppy....',
-  },
-  {
-    name: '둔켈',
-    abv: 6.0,
-    tagline: 'Baran',
-    description: '음 맛있을걸?',
-  },
-  {
-    name: 'Punk IPA 2007 - 2010',
-    abv: 5.5,
-    tagline: 'Post Modern Classic. Spiky. Tropical. Hoppy.',
-    description: 'PosSpiky. Tropical. Hoppy. Tropical. Hoppy....',
-  },
-  {
-    name: '둔켈',
-    abv: 6.0,
-    tagline: 'Baran',
-    description: '음 맛있을걸?',
-  },
-  {
-    name: 'Punk IPA 2007 - 2010',
-    abv: 5.5,
-    tagline: 'Post Modern Classic. Spiky. Tropical. Hoppy.',
-    description: 'PosSpiky. Tropical. Hoppy. Tropical. Hoppy....',
-  },
-  {
-    name: '둔켈',
-    abv: 6.0,
-    tagline: 'Baran',
-    description: '음 맛있을걸?',
-  },
-  {
-    name: 'Punk IPA 2007 - 2010',
-    abv: 5.5,
-    tagline: 'Post Modern Classic. Spiky. Tropical. Hoppy.',
-    description: 'PosSpiky. Tropical. Hoppy. Tropical. Hoppy....',
-  },
-  {
-    name: '둔켈',
-    abv: 6.0,
-    tagline: 'Baran',
-    description: '음 맛있을걸?',
-  },
-  {
-    name: 'Punk IPA 2007 - 2010',
-    abv: 5.5,
-    tagline: 'Post Modern Classic. Spiky. Tropical. Hoppy.',
-    description: 'PosSpiky. Tropical. Hoppy. Tropical. Hoppy....',
-  },
-  {
-    name: '둔켈',
-    abv: 6.0,
-    tagline: 'Baran',
-    description: '음 맛있을걸?',
-  },
-  {
-    name: 'Punk IPA 2007 - 2010',
-    abv: 5.5,
-    tagline: 'Post Modern Classic. Spiky. Tropical. Hoppy.',
-    description: 'PosSpiky. Tropical. Hoppy. Tropical. Hoppy....',
-  },
-  {
-    name: '둔켈',
-    abv: 6.0,
-    tagline: 'Baran',
-    description: '음 맛있을걸?',
-  },
-  {
-    name: 'Punk IPA 2007 - 2010',
-    abv: 5.5,
-    tagline: 'Post Modern Classic. Spiky. Tropical. Hoppy.',
-    description: 'PosSpiky. Tropical. Hoppy. Tropical. Hoppy....',
-  },
-  {
-    name: '둔켈',
-    abv: 6.0,
-    tagline: 'Baran',
-    description: '음 맛있을걸?',
-  },
-  {
-    name: 'Punk IPA 2007 - 2010',
-    abv: 5.5,
-    tagline: 'Post Modern Classic. Spiky. Tropical. Hoppy.',
-    description: 'PosSpiky. Tropical. Hoppy. Tropical. Hoppy....',
-  },
-  {
-    name: '둔켈',
-    abv: 6.0,
-    tagline: 'Baran',
-    description: '음 맛있을걸?',
-  },
-];
 export default BeerList;
