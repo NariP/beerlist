@@ -7,14 +7,22 @@ import {
 } from 'react-icons/ri';
 import { useTheme } from 'styled-components';
 import styled from 'styled-components';
-import { tableIcons, columns } from './Secitons';
+import { tableIcons } from './Secitons';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCurrentColumns, setOrder } from 'Modules/slices/cardHeader';
 
 const BeerList = () => {
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const currentColumns = useSelector(getCurrentColumns);
   const [cartState, setCartState] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
   const onColumnDraggedHandler = (sourceIndex, destinationIndex) => {
-    console.log(sourceIndex, destinationIndex);
+    const columnList = [...currentColumns];
+    let temp = columnList[sourceIndex];
+    columnList[sourceIndex] = columnList[destinationIndex];
+    columnList[destinationIndex] = temp;
+    dispatch(setOrder(columnList));
   };
 
   return (
@@ -22,7 +30,7 @@ const BeerList = () => {
       <h1>BeerList</h1>
       <div style={{ maxWidth: '100%' }}>
         <MaterialTable
-          columns={columns}
+          columns={currentColumns.map(current => ({ ...current }))}
           actions={[
             {
               icon: 'save',
