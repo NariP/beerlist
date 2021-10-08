@@ -38,8 +38,13 @@ const General = ({ children }) => {
           />
         </RightLayout>
       </Header>
-      <Content>{children}</Content>
-      <Footer>Footer</Footer>
+      <Content className="general-content">{children}</Content>
+      <Footer className="general-footer">
+        Made By{' '}
+        <a target="_blank" href="https://github.com/NariP">
+          @nari park
+        </a>
+      </Footer>
     </GeneralLayout>
   );
 };
@@ -56,6 +61,22 @@ const GeneralLayout = styled(Layout)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    borderBottom: `1px ${theme.color.normalAlpha}`,
+    boxShadow: `0 3px 5px ${theme.color.normalAlpha}`,
+    height: 64,
+  },
+  '.general-content': {
+    padding: '1rem',
+    minHeight: 'calc(100vh - 64px - 69px)',
+  },
+  '.general-footer': {
+    backgroundColor: theme.color.bgColor,
+    color: theme.color.secondaryText,
+    borderTop: `1px ${theme.color.normalAlpha}`,
+    height: 69,
+    a: {
+      color: theme.color.third,
+    },
   },
 }));
 const RightLayout = styled.div({
