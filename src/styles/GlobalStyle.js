@@ -32,5 +32,8 @@ const GlobalStyle = createGlobalStyle`
   a{
   color: #333;
   }
+  p {
+  margin-bottom: 0;
+  }
 `;
 export default GlobalStyle;

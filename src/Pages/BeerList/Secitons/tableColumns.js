@@ -4,7 +4,8 @@ const columns = [
     title: 'Image',
     render: rowData => (
       <img
-        src={rowData.url}
+        src={rowData.image_url}
+        alt={rowData.name}
         style={{
           width: 50,
           height: 50,

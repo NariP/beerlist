@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import MaterialTable, { MTableToolbar } from 'material-table';
 import { RiShoppingBag2Line, RiShoppingBag2Fill } from 'react-icons/ri';
-import { useTheme } from 'styled-components';
 import styled from 'styled-components';
-import { tableIcons, Filter } from './Secitons';
-import { useDispatch, useSelector } from 'react-redux';
+import { useTheme } from 'styled-components';
+import { Modal, ModalInner, CloseButton } from 'components';
+import { tableIcons, Filter, BeerDetail } from './Secitons';
 import { getCurrentColumns, setOrder } from 'Modules/slices/cardHeader';
 import {
   beersRequest,
@@ -18,6 +19,7 @@ const BeerList = () => {
   const currentColumns = useSelector(getCurrentColumns);
   const beersInfo = useSelector(getBeers);
   const beerRequestState = useSelector(getBeerRequestState);
+  const [open, setOpen] = useState(false);
   const [abvRange, setAbvRange] = useState({ start: 0, end: 20 });
   const [cartState, setCartState] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -26,14 +28,7 @@ const BeerList = () => {
     ?.filter(
       ({ abv }) => Number(abv) >= abvRange.start && Number(abv) < abvRange.end,
     )
-    .map(({ name, image_url, abv, tagline, description, id }) => ({
-      name,
-      url: image_url,
-      abv,
-      tagline,
-      description,
-      id,
-    }));
+    .map(ele => ({ ...ele }));
 
   const columnDraggedHandler = (sourceIndex, destinationIndex) => {
     const columnList = [...currentColumns];
@@ -42,12 +37,17 @@ const BeerList = () => {
     columnList[destinationIndex] = temp;
     dispatch(setOrder(columnList));
   };
-  const getBeerData = () => {
-    dispatch(beersRequest());
+
+  const toggleModal = () => {
+    setOpen(!open);
   };
+
   useEffect(() => {
+    const getBeerData = () => {
+      dispatch(beersRequest());
+    };
     getBeerData();
-  }, []);
+  }, [dispatch]);
 
   return (
     <Wrapper>
@@ -83,9 +83,10 @@ const BeerList = () => {
           }}
           data={beersInfoSimple}
           icons={tableIcons}
-          onRowClick={(evt, selectedRow) =>
-            setSelectedRow(selectedRow.tableData.id)
-          }
+          onRowClick={(evt, selectedRow) => {
+            setSelectedRow(selectedRow);
+            toggleModal();
+          }}
           onColumnDragged={columnDraggedHandler}
           //---------- table info
           title="맥주 정보"
@@ -105,7 +106,7 @@ const BeerList = () => {
             },
             rowStyle: rowData => ({
               backgroundColor:
-                selectedRow === rowData.tableData.id
+                selectedRow?.tableData.id === rowData.tableData.id
                   ? theme.color.secondaryBgColor
                   : theme.color.bgColor,
             }),
@@ -122,6 +123,14 @@ const BeerList = () => {
           }}
         />
       </div>
+      <Modal toggleModal={toggleModal} open={open}>
+        <ModalInner
+          title="맥주 상세 정보"
+          closeButton={<CloseButton toggleModal={toggleModal} />}
+        >
+          <BeerDetail selectedBeer={selectedRow} />
+        </ModalInner>
+      </Modal>
     </Wrapper>
   );
 };
