@@ -16,6 +16,7 @@ const BeerCard = ({ data }) => {
 };
 const StyledCard = styled(Card)(({ theme }) => ({
   backgroundColor: theme.color.bgColor,
+  borderColor: theme.color.normalAlpha,
   '.ant-card-meta-title, .ant-card-meta-description': {
     color: theme.color.textColor,
   },

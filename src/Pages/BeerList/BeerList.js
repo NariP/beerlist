@@ -58,7 +58,7 @@ const BeerList = () => {
 
   return (
     <Wrapper>
-      <h2>BeerList</h2>
+      <PageName>BeerList</PageName>
       <div style={{ maxWidth: '100%' }}>
         <MaterialTable
           columns={currentColumns.map(current => ({ ...current }))}
@@ -150,7 +150,14 @@ const BeerList = () => {
   );
 };
 
+const PageName = styled.h2(({ theme }) => ({
+  fontSize: '1.5em',
+  fontWeight: 'bold',
+  color: theme.color.textColor,
+}));
 const Wrapper = styled.div(({ theme }) => ({
+  maxWidth: 1200,
+  margin: '0 auto',
   '& table > tfoot > tr > td': {
     color: theme.color.textColor,
     '& span,svg': {

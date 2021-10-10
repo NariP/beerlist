@@ -63,10 +63,15 @@ const GeneralLayout = styled(Layout)(({ theme }) => ({
     borderBottom: `1px ${theme.color.normalAlpha}`,
     boxShadow: `0 3px 5px ${theme.color.normalAlpha}`,
     height: 64,
+    zIndex: 100,
+    position: 'sticky',
+    top: 0,
+    width: '100%',
   },
   '.general-content': {
     padding: '1rem',
     minHeight: 'calc(100vh - 64px - 69px)',
+    backgroundColor: theme.color.secondaryBgColor,
   },
   '.general-footer': {
     backgroundColor: theme.color.bgColor,
