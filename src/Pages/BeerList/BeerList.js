@@ -5,7 +5,14 @@ import { RiShoppingBag2Line, RiShoppingBag2Fill } from 'react-icons/ri';
 import styled from 'styled-components';
 import { useTheme } from 'styled-components';
 import { Modal, ModalInner, CloseButton } from 'components';
-import { tableIcons, Filter, BeerDetail } from './Secitons';
+import {
+  tableIcons,
+  Filter,
+  BeerDetail,
+  setLocalItemList,
+  findLocalItemById,
+  deleteLocalItemById,
+} from './Secitons';
 import { getCurrentColumns, setOrder } from 'Modules/slices/cardHeader';
 import {
   beersRequest,
@@ -21,8 +28,8 @@ const BeerList = () => {
   const beerRequestState = useSelector(getBeerRequestState);
   const [open, setOpen] = useState(false);
   const [abvRange, setAbvRange] = useState({ start: 0, end: 20 });
-  const [cartState, setCartState] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
+  const [cartState, setCartState] = useState(false);
 
   const beersInfoSimple = beersInfo
     ?.filter(
@@ -51,27 +58,35 @@ const BeerList = () => {
 
   return (
     <Wrapper>
-      <h1>BeerList</h1>
+      <h2>BeerList</h2>
       <div style={{ maxWidth: '100%' }}>
         <MaterialTable
           columns={currentColumns.map(current => ({ ...current }))}
           actions={[
             {
               icon: 'save',
-              tooltip: 'Save User',
+              tooltip: '장바구니 추가',
               onClick: (event, rowData) => {
-                // alert('You saved ' + rowData.name);
+                event.stopPropagation();
+                if (!findLocalItemById(rowData.id)) {
+                  alert(`${rowData.name} 맥주를 장바구니에 추가하였습니다.`);
+                  setLocalItemList(rowData);
+                } else {
+                  alert(`${rowData.name} 맥주를 장바구니에서 삭제하였습니다.`);
+                  deleteLocalItemById(rowData.id);
+                }
                 setCartState(!cartState);
               },
             },
           ]}
           components={{
-            Action: props => (
-              <IconButton
-                onClick={event => props.action.onClick(event, props.data)}
-              >
-                {/* fixme: 해당 데이터에 맡게 보이게 고치기*/}
-                {cartState ? <RiShoppingBag2Fill /> : <RiShoppingBag2Line />}
+            Action: ({ action, data }) => (
+              <IconButton onClick={event => action.onClick(event, data)}>
+                {findLocalItemById(data.id) ? (
+                  <RiShoppingBag2Fill />
+                ) : (
+                  <RiShoppingBag2Line />
+                )}
               </IconButton>
             ),
             Toolbar: props => (
@@ -146,7 +161,7 @@ const Wrapper = styled.div(({ theme }) => ({
 
 const IconButton = styled.button(({ theme }) => ({
   border: 'none',
-  backgroundColor: theme.color.bgColor,
+  backgroundColor: 'rgba(0,0,0,0)',
   color: theme.color.textColor,
   '&:hover': {
     color: theme.color.primary,

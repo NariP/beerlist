@@ -1,8 +1,8 @@
 const localStorageWorker = {
-  getItem: key => {
+  getItem: function (key) {
     return JSON.parse(localStorage.getItem(key));
   },
-  setItem: (key, data) => {
+  setItem: function (key, data) {
     localStorage.setItem(key, JSON.stringify(data));
   },
 };
