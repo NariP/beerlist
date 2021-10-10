@@ -1,38 +1,41 @@
 import { useEffect, useState } from 'react';
 import MaterialTable, { MTableToolbar } from 'material-table';
-import {
-  RiShoppingBag2Line,
-  RiShoppingBag2Fill,
-  RiFilter2Fill,
-} from 'react-icons/ri';
+import { RiShoppingBag2Line, RiShoppingBag2Fill } from 'react-icons/ri';
 import { useTheme } from 'styled-components';
 import styled from 'styled-components';
-import { tableIcons } from './Secitons';
+import { tableIcons, Filter } from './Secitons';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentColumns, setOrder } from 'Modules/slices/cardHeader';
-import { beersRequest, getBeers } from 'Modules/slices/Beers';
+import {
+  beersRequest,
+  getBeers,
+  getBeerRequestState,
+} from 'Modules/slices/Beers';
 
 const BeerList = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const currentColumns = useSelector(getCurrentColumns);
   const beersInfo = useSelector(getBeers);
+  const beerRequestState = useSelector(getBeerRequestState);
+  const [abvRange, setAbvRange] = useState({ start: 0, end: 20 });
+  const [cartState, setCartState] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
 
-  const beersInfoSimple = beersInfo?.map(
-    ({ name, image_url, abv, tagline, description, id }) => ({
+  const beersInfoSimple = beersInfo
+    ?.filter(
+      ({ abv }) => Number(abv) >= abvRange.start && Number(abv) < abvRange.end,
+    )
+    .map(({ name, image_url, abv, tagline, description, id }) => ({
       name,
       url: image_url,
       abv,
       tagline,
       description,
       id,
-    }),
-  );
+    }));
 
-  const [cartState, setCartState] = useState(false);
-  const [selectedRow, setSelectedRow] = useState(null);
-
-  const onColumnDraggedHandler = (sourceIndex, destinationIndex) => {
+  const columnDraggedHandler = (sourceIndex, destinationIndex) => {
     const columnList = [...currentColumns];
     let temp = columnList[sourceIndex];
     columnList[sourceIndex] = columnList[destinationIndex];
@@ -74,9 +77,7 @@ const BeerList = () => {
             Toolbar: props => (
               <ToolBar>
                 <MTableToolbar {...props} />
-                <IconButton>
-                  <RiFilter2Fill />
-                </IconButton>
+                <Filter abvRange={abvRange} setAbvRange={setAbvRange} />
               </ToolBar>
             ),
           }}
@@ -85,7 +86,7 @@ const BeerList = () => {
           onRowClick={(evt, selectedRow) =>
             setSelectedRow(selectedRow.tableData.id)
           }
-          onColumnDragged={onColumnDraggedHandler}
+          onColumnDragged={columnDraggedHandler}
           //---------- table info
           title="맥주 정보"
           style={{
@@ -114,7 +115,9 @@ const BeerList = () => {
               actions: 'Cart',
             },
             body: {
-              emptyDataSourceMessage: '데이터가 없습니다',
+              emptyDataSourceMessage: beerRequestState
+                ? '데이터 로딩중...'
+                : '데이터가 없습니다',
             },
           }}
         />

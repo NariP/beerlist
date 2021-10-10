@@ -27,3 +27,4 @@ export const beersSlice = createSlice({
 export const { beersRequest, beersRequestFailure, beersRequestSuccess } =
   beersSlice.actions;
 export const getBeers = state => state.beers.beersInfo;
+export const getBeerRequestState = state => state.beers.beersLoading;
